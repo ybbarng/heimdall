@@ -10,22 +10,22 @@ function buildEmbed(caseLabel: string, changes: Changes) {
 
   for (const item of changes.newProgressItems) {
     fields.push({
-      name: `${formatDate(item.progYmd)} 진행`,
+      name: `(신규) ${formatDate(item.progYmd)} 진행`,
       value: item.progCtt + (item.progRslt ? ` (${item.progRslt})` : ""),
     });
   }
 
   for (const doc of changes.newSubmissions) {
     fields.push({
-      name: `${formatDate(doc.ofdocRcptYmd)} 서류`,
+      name: `(신규) ${formatDate(doc.ofdocRcptYmd)} 서류 제출`,
       value: `${doc.content1}${doc.content2}${doc.content3}`,
     });
   }
 
   for (const change of changes.generalChanges) {
     fields.push({
-      name: `변경: ${change.field}`,
-      value: `${String(change.from)} -> ${String(change.to)}`,
+      name: `(변경) ${change.field}`,
+      value: `${String(change.from)} → ${String(change.to)}`,
       inline: true,
     });
   }
