@@ -4,3 +4,4 @@ dist/
 cases.json
 data/
 *.curl
+logs/
