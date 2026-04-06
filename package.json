@@ -1,0 +1,20 @@
+{
+  "name": "easy-scourt",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "tsx --env-file=.env src/index.ts",
+    "check": "tsx --env-file=.env src/index.ts --once"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.32.1",
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "biome": "^0.3.3",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}
