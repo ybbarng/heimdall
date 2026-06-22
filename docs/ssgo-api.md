@@ -17,6 +17,9 @@
 |-----------|------|----------|----------|
 | 신청사건 (카임 등) | ssgo105 | `selectHmpgAplyCsGnrlCtt.on` | `selectHmpgAplyCsProgCtt.on` |
 | 민사집행 (타경 등) | ssgo109 | `selectHmpgCmexecCsGnrlCtt.on` | `selectHmpgCmexecCsProgCtt.on` |
+| 회생·파산 (개회 등) | ssgo107 | `selectHmpgRhblBnkpCsGnrlCtt.on` | `selectHmpgRhblBnkpCsProgCtt.on` |
+
+> 회생·파산(도산) 사건도 세션/쿠키 없이 암호화 토큰만으로 조회된다. 단 `nrlnmDvsCd`는 검색 단계(`srchCsDetail.on`)가 돌려주는 값과 상세 조회가 쓰는 값이 다를 수 있으니, 토큰은 반드시 실제 `selectHmpg...` 요청에서 추출한다.
 
 기본 URL: `https://ssgo.scourt.go.kr/ssgo/{모듈}/{엔드포인트}`
 

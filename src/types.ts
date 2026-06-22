@@ -1,7 +1,7 @@
 export interface CaseConfig {
   id: string;
   label: string;
-  type: "apply" | "cmexec";
+  type: "apply" | "cmexec" | "rehab";
   endpoint: string;
   progressEndpoint: string;
   params: {
