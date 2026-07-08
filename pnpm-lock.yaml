@@ -24,6 +24,12 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
 
+  apps/switch2:
+    dependencies:
+      '@heimdall/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+
   packages/core: {}
 
 packages:

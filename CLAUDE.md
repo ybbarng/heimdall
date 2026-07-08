@@ -18,6 +18,7 @@ packages/core/   # @heimdall/core — 도메인 무관 공용 인프라
   src/discord.ts   # sendDiscord: 웹훅 전송 + dry-run 옵션, COLOR 상수
   src/logger.ts    # createLogger: 표준 로거 (console + logs/<워처>-YYYY-MM-DD.log)
 apps/scourt/     # 나의사건검색(ssgo) 워처. 상세는 apps/scourt/CLAUDE.md
+apps/switch2/    # 롯데마트 스위치2 재고 워처. 상세는 apps/switch2/CLAUDE.md
 ```
 
 - 앱은 fetch·diff만 자기 안에 두고, 상태 저장·알림·로그는 core에서 가져온다.
@@ -26,7 +27,7 @@ apps/scourt/     # 나의사건검색(ssgo) 워처. 상세는 apps/scourt/CLAUDE
 
 ## 로그
 
-core `createLogger(name, logDir)`로 표준화. 루트 `logs/<워처>-YYYY-MM-DD.log`에 `[ISO] [워처] LEVEL: 메시지` 포맷으로 남고 console에도 출력된다. 앱이 `new URL("../../../logs/", import.meta.url)`로 루트 logs를 주입한다. cron은 리다이렉트 없이 `run.sh`만 호출한다.
+core `createLogger(name, logDir)`로 표준화. 루트 `logs/<워처>-YYYY-MM-DD.log`에 `[ISO] [워처] LEVEL: 메시지` 포맷으로 남고 console에도 출력된다. 앱이 `new URL("../../../logs/", import.meta.url)`로 루트 logs를 주입한다. cron은 리다이렉트 없이 `run.sh <앱>`만 호출한다(부트 원시 출력은 `logs/run-<앱>.log`).
 
 ## 실행
 
@@ -34,8 +35,13 @@ core `createLogger(name, logDir)`로 표준화. 루트 `logs/<워처>-YYYY-MM-DD
 pnpm check    # scourt 1회 조회 (run.sh가 호출)
 pnpm start    # scourt 데몬 모드
 pnpm dry      # scourt dry-run (실제 조회, 미전송·미저장)
+
+pnpm --filter switch2 dry     # switch2 dry-run
+pnpm --filter switch2 start   # switch2 데몬 (30~60초 간격)
 ```
 
 ## 배포
 
 Ubuntu 서버에서 `run.sh` + cron. cron 환경 PATH 문제로 run.sh 래퍼가 필요(nvm node 경로 지정).
+`run.sh <앱>`으로 워처별로 cron에 따로 등록한다. switch2를 초 단위로 돌리려면 cron 대신
+데몬 모드(`pnpm --filter switch2 start`)를 systemd/nohup으로 상시 구동한다.

@@ -1,0 +1,14 @@
+{
+  "name": "switch2",
+  "version": "1.0.0",
+  "description": "롯데마트 닌텐도 스위치2 재고 폴링 알림 워처",
+  "type": "module",
+  "scripts": {
+    "start": "tsx --env-file=.env src/index.ts",
+    "check": "tsx --env-file=.env src/index.ts --once",
+    "dry": "tsx --env-file=.env src/index.ts --dry-run"
+  },
+  "dependencies": {
+    "@heimdall/core": "workspace:*"
+  }
+}
