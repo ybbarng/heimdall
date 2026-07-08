@@ -1,74 +1,51 @@
-# easy-scourt
+# heimdall
 
-나의사건검색(ssgo.scourt.go.kr) 소송 진행상황을 주기적으로 확인하고, 변경이 감지되면 Discord로 알림을 보내는 모니터링 도구.
+여러 대상을 주기적으로 폴링해, 변경이 감지되면 Discord로 알려주는 워처 모음.
 
-## 동작 방식
+> 북유럽 신화에서 heimdall은 아스가르드의 파수꾼으로, 온 세상을 지켜보다가 이상이 생기면 알린다.
 
-1. 사건별 암호화 토큰으로 ssgo API를 호출하여 일반내용/진행내용을 조회
-2. 이전 조회 결과(`data/state.json`)와 비교하여 변경 감지
-3. 새로운 진행내용, 제출서류, 일반내용 변경 시 Discord 웹훅으로 알림 발송
+## 구조
 
-세션이나 로그인 없이, 최초 사건 검색 시 발급받은 암호화 토큰만으로 조회할 수 있다.
+pnpm workspace 모노레포.
 
-## 설정
+```
+packages/
+└── core/            # @heimdall/core — 도메인 무관 공용 인프라
+    ├── storage.ts   # JSON 파일 상태 저장/로드 (제네릭)
+    ├── discord.ts   # Discord 웹훅 전송 + dry-run
+    └── logger.ts    # 표준 로거 (logs/<워처>-YYYY-MM-DD.log)
+apps/
+└── scourt/          # 나의사건검색(ssgo) 소송 진행 알림
+```
 
-### 1. 환경변수
+각 워처는 "무엇을 가져오나(fetch)"와 "무엇을 변경으로 볼까(diff)"만 자기 앱에 두고, 상태 저장·알림·로그는 core를 쓴다. 폴링 주기 같은 실시간성 차이는 앱별 설정값으로 흡수한다.
+
+## 로그
+
+모든 워처가 core `createLogger`로 루트 `logs/`에 `<워처>-YYYY-MM-DD.log` 형태의 표준 로그를 남긴다. cron 리다이렉트가 아니라 앱이 로그 위치를 직접 관리한다. `run.sh`는 부트 단계 원시 출력만 `logs/run.log`로 남긴다.
+
+## 개발
 
 ```bash
-cp .env.example .env
+pnpm install          # workspace 전체 설치
+
+pnpm check            # scourt 1회 조회
+pnpm start            # scourt 데몬 모드
+pnpm dry              # scourt dry-run (미전송·미저장)
 ```
 
-`.env` 파일에 Discord 웹훅 URL을 입력한다.
+앱 하나만 다루려면 `pnpm --filter <앱> <스크립트>`.
 
-### 2. 사건 등록 (cases.json)
+## 배포
 
-브라우저에서 나의사건검색 후 네트워크 탭에서 curl 복사 → 요청 바디의 암호화 토큰을 추출하여 `cases.json`에 등록한다.
+Ubuntu 서버에서 `run.sh` + cron. cron은 `run.sh`만 호출한다.
 
-```json
-[
-  {
-    "id": "case1",
-    "label": "2025가합12345 손해배상",
-    "type": "apply",
-    "endpoint": "https://ssgo.scourt.go.kr/ssgo/ssgo105/selectHmpgAplyCsGnrlCtt.on",
-    "progressEndpoint": "https://ssgo.scourt.go.kr/ssgo/ssgo105/selectHmpgAplyCsProgCtt.on",
-    "params": {
-      "cortCd": "(암호화된 값)",
-      "csYear": "2025",
-      "csSerial": "(암호화된 값)",
-      "btprtNm": "홍길동",
-      "csDvsNm": "가합",
-      "prwlKey": "(암호화된 값)",
-      "atho": "(암호화된 값)",
-      "nrlnmDvsCd": "(암호화된 값)"
-    }
-  }
-]
+```
+5 * * * * /home/ybbarng/heimdall/run.sh
 ```
 
-- `type: "apply"` → 신청사건 (ssgo105)
-- `type: "cmexec"` → 민사집행사건 (ssgo109)
+## 새 워처 추가
 
-## 실행
-
-```bash
-pnpm install
-
-# 1회 조회
-pnpm check
-
-# 데몬 모드 (폴링 간격은 .env의 POLL_INTERVAL_MINUTES)
-pnpm start
-```
-
-## 서버 배포 (cron)
-
-```bash
-# run.sh로 실행 (PATH 설정 포함)
-crontab -e
-
-# 매시 정각 실행
-0 * * * * /path/to/easy-scourt/run.sh >> /path/to/easy-scourt/logs/cron.log 2>&1
-```
-
-`logs/` 디렉토리를 미리 생성해야 한다.
+1. `apps/<이름>/` 에 `package.json`(`@heimdall/core` 의존), `tsconfig.json`, `src/index.ts` 생성
+2. fetch·diff 로직만 앱에 구현하고 상태 저장·알림·로그는 core 사용
+3. 루트 `package.json`에 필요하면 스크립트 위임 추가

@@ -1,19 +1,17 @@
 {
-  "name": "easy-scourt",
+  "name": "heimdall",
   "version": "1.0.0",
-  "description": "",
+  "description": "여러 대상을 폴링해 변경 시 Discord로 알리는 워처 모음",
+  "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx --env-file=.env src/index.ts",
-    "check": "tsx --env-file=.env src/index.ts --once"
+    "check": "pnpm --filter scourt check",
+    "start": "pnpm --filter scourt start",
+    "dry": "pnpm --filter scourt dry"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "packageManager": "pnpm@10.32.1",
   "devDependencies": {
     "@types/node": "^25.5.2",
-    "biome": "^0.3.3",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }
