@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>스위치2 전국 재고 지도</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root { --green:#2ecc71; --gray:#95a5a6; --faint:#d0d5da; --blue:#3498db; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; font-family: system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif; }
+    #map { position: absolute; inset: 0; }
+    #panel {
+      position: absolute; z-index: 1000; top: 12px; left: 12px;
+      background: rgba(255,255,255,.95); border-radius: 10px; padding: 12px 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.15); font-size: 13px; line-height: 1.5; max-width: 260px;
+    }
+    #panel h1 { font-size: 15px; margin: 0 0 6px; }
+    #panel .big { font-size: 22px; font-weight: 700; color: var(--green); }
+    #panel .muted { color: #667; font-size: 12px; }
+    #panel .legend { margin-top: 8px; display: grid; gap: 3px; }
+    #panel .legend span { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+    .pin {
+      display: flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700;
+      border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.4);
+    }
+    .pin.instock { background: var(--green); }
+    .pin.soldout { background: var(--gray); width: 16px; height: 16px; }
+    .pin.none    { background: var(--faint); width: 12px; height: 12px; border-width: 1px; }
+    .pin.notify  { outline: 3px solid var(--blue); outline-offset: 1px; }
+    .leaflet-popup-content { font-size: 13px; line-height: 1.5; }
+    .leaflet-popup-content b { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="panel">
+    <h1>🎮 스위치2 전국 재고</h1>
+    <div><span class="big" id="instockCount">–</span> 곳 재고 있음</div>
+    <div class="muted" id="summary">불러오는 중…</div>
+    <div class="legend">
+      <div><span style="background:var(--green)"></span>재고 있음 (숫자=수량)</div>
+      <div><span style="background:var(--gray)"></span>품절</div>
+      <div><span style="background:var(--faint)"></span>본체 미취급</div>
+      <div><span style="background:#fff;outline:2px solid var(--blue)"></span>알림 대상 지점</div>
+    </div>
+    <div class="muted" id="updated"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const BODY = "닌텐도 스위치 2";
+    const norm = (s) => s.replace(/\s+/g, "");
+
+    const map = L.map("map", { zoomControl: true }).setView([36.5, 127.8], 7);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap',
+    }).addTo(map);
+
+    const layer = L.layerGroup().addTo(map);
+    let markets = [];
+
+    // state.json의 지점별 본체 재고를 꺼낸다
+    function bodyStock(marketState) {
+      if (!marketState || !marketState.products) return null;
+      const key = Object.keys(marketState.products).find((k) => norm(k) === norm(BODY));
+      return key ? marketState.products[key] : null;
+    }
+
+    function fmtTime(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      return d.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function render(state) {
+      layer.clearLayers();
+      let instock = 0, latest = "";
+
+      for (const m of markets) {
+        if (typeof m.lat !== "number") continue;
+        const st = state[m.code];
+        const stock = m.hasBody === false ? null : bodyStock(st);
+        const has = stock && stock.inStock;
+        if (has) instock++;
+        if (st && st.lastChecked > latest) latest = st.lastChecked;
+
+        let cls = "pin ", label = "";
+        if (m.hasBody === false) cls += "none";
+        else if (has) { cls += "instock"; label = String(stock.qty ?? ""); }
+        else cls += "soldout";
+        if (m.notify) cls += " notify";
+
+        const size = m.hasBody === false ? 12 : has ? 26 : 16;
+        const icon = L.divIcon({
+          className: "",
+          html: `<div class="${cls}">${label}</div>`,
+          iconSize: [size, size],
+          iconAnchor: [size / 2, size / 2],
+        });
+
+        const stockText = m.hasBody === false ? "본체 미취급"
+          : !st ? "정보 없음"
+          : has ? `재고 <b>${stock.qty}개</b>` : "품절";
+        const popup =
+          `<b>${m.name}</b>${m.notify ? " 🔔" : ""}<br>` +
+          `${m.address ?? ""}<br>${stockText}` +
+          (st ? `<br><span style="color:#889">확인 ${fmtTime(st.lastChecked)}</span>` : "");
+
+        L.marker([m.lat, m.lng], { icon, zIndexOffset: has ? 1000 : 0 })
+          .bindPopup(popup)
+          .addTo(layer);
+      }
+
+      document.getElementById("instockCount").textContent = instock;
+      document.getElementById("summary").textContent =
+        `전국 ${markets.length}개 지점 · 본체취급 ${markets.filter((m) => m.hasBody !== false).length}곳`;
+      document.getElementById("updated").textContent = latest ? `마지막 확인 ${fmtTime(latest)}` : "";
+    }
+
+    async function loadState() {
+      try {
+        const r = await fetch("state.json?" + Date.now());
+        return r.ok ? await r.json() : {};
+      } catch { return {}; }
+    }
+
+    async function init() {
+      markets = await (await fetch("markets.json")).json();
+      render(await loadState());
+      // 30초마다 재고만 갱신 (지점 좌표는 고정)
+      setInterval(async () => render(await loadState()), 30000);
+    }
+    init();
+  </script>
+</body>
+</html>
