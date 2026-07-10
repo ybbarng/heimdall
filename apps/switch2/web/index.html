@@ -104,10 +104,12 @@
         const stockText = m.hasBody === false ? "본체 미취급"
           : !st ? "정보 없음"
           : has ? `재고 <b>${stock.qty}개</b>` : "품절";
+        const naverUrl = `https://map.naver.com/p/search/${encodeURIComponent("롯데마트 " + m.name)}`;
         const popup =
           `<b>${m.name}</b>${m.notify ? " 🔔" : ""}<br>` +
           `${m.address ?? ""}<br>${stockText}` +
-          (st ? `<br><span style="color:#889">확인 ${fmtTime(st.lastChecked)}</span>` : "");
+          (st ? `<br><span style="color:#889">확인 ${fmtTime(st.lastChecked)}</span>` : "") +
+          `<br><a href="${naverUrl}" target="_blank" rel="noopener">📍 네이버지도에서 길찾기</a>`;
 
         L.marker([m.lat, m.lng], { icon, zIndexOffset: has ? 1000 : 0 })
           .bindPopup(popup)
