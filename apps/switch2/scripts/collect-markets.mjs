@@ -1,14 +1,24 @@
-// 전국 롯데마트 지점의 코드·이름·주소·스위치2 본체 취급 여부를 수집해
-// docs/markets.md 참조 문서를 갱신한다. markets.json 확장·변경 시 참고용.
+// 전국 롯데마트 지점의 코드·이름·주소·좌표·스위치2 본체 취급 여부를 수집해
+// markets.json(워처·지도용)과 docs/markets.md(참조 문서)를 갱신한다.
 //
 //   node apps/switch2/scripts/collect-markets.mjs
 //
-// 재고 수량은 수시로 바뀌므로 문서에는 "본체 취급 여부"(검색 결과에 본체가 뜨는지)만 남긴다.
-import { mkdir, writeFile } from "node:fs/promises";
+// - markets.json: 전국 지점 { code, name, address, lat, lng, notify, hasBody }
+//   · notify=true 인 지점만 Discord 알림(NOTIFY_CODES). 나머지는 지도에만 표시
+//   · 좌표는 도로명주소를 OpenStreetMap Nominatim으로 지오코딩(무료·키 불필요, 1req/s)
+// - docs/markets.md: 사람이 읽는 참조표(본체 취급 여부)
+// 재고 수량은 수시로 바뀌므로 여기엔 안 담는다. 최신 재고는 워처 state.json에서.
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const AREAS = ["서울","경기","인천","강원","충북","충남","대전","경북","경남","대구","부산","울산","전북","전남","광주","기타"];
 const SEARCH = "스위치2";
 const BODY = "닌텐도스위치2"; // 공백 제거 정규화 후 정확 일치
+
+// Discord 알림 대상(서울 동부 + 경기 동부·동남부). 이 지점만 notify=true
+const NOTIFY_CODES = new Set([
+  "2334","2302","2303","2301","2322","2323","2312", // 서울
+  "2471","2405","2457","2453","2473","2422","2417", // 경기
+]);
 
 const norm = (s) => s.replace(/\s+/g, "").toLowerCase();
 const stripTags = (h) => h.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
@@ -29,6 +39,40 @@ async function getAddr(area, code) {
   })).text();
   const m = html.match(/주소\s*:\s*<\/span>\s*([^<]+)</);
   return m ? m[1].trim() : "";
+}
+
+// 주소를 지오코딩용으로 정리해 "시도 시군구 … 도로명 건물번호"까지만 남긴다.
+// 도로명(…로/길) 뒤 마지막 건물번호까지 끊어 건물명·동·층 등 꼬리를 버린다.
+function cleanAddr(addr) {
+  const base = addr.replace(/[(,].*$/, "").trim(); // 괄호·쉼표 이후 제거
+  // 마지막 "로|길" + 건물번호(예: "광나루로 56길 85")까지 greedy 매칭
+  const road = base.match(/^(.*[로길]\s*\d+(?:-\d+)?)/);
+  let out = (road ? road[1] : base.replace(/번지.*$/, "")).replace(/\s+/g, " ").trim();
+  // 한국 도로명을 "…로 56길"처럼 띄우면 Nominatim이 못 찾는다 → "…로56길"로 붙인다
+  out = out.replace(/([가-힣]+로)\s+(\d+번?길)/g, "$1$2");
+  return out;
+}
+
+const GEO_UA = "heimdall-switch2-map/1.0 (personal project)";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Nominatim 지오코딩. 도로명주소 실패 시 시/군/구 단위로 폴백. 실패하면 null
+async function geocode(addr, districtName) {
+  const tries = [cleanAddr(addr), districtName].filter(Boolean);
+  for (const q of tries) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=kr&q=${encodeURIComponent(q)}`;
+      const res = await fetch(url, { headers: { "User-Agent": GEO_UA } });
+      const data = await res.json();
+      await sleep(1100); // Nominatim 정책: 1req/s 이하
+      if (data[0]) {
+        return { lat: Number(data[0].lat), lng: Number(data[0].lon), approx: q === districtName };
+      }
+    } catch {
+      await sleep(1100);
+    }
+  }
+  return null;
 }
 
 // 검색 결과에 본체가 있으면 true
@@ -56,6 +100,21 @@ function district(addr) {
   return m ? m[1] : "";
 }
 
+// 재실행 시 Nominatim 부담을 줄이려 기존 markets.json의 좌표를 캐시로 재사용한다
+async function loadCoordCache() {
+  try {
+    const raw = await readFile(new URL("../markets.json", import.meta.url), "utf-8");
+    const cache = {};
+    for (const m of JSON.parse(raw)) {
+      if (typeof m.lat === "number") cache[m.code] = { lat: m.lat, lng: m.lng };
+    }
+    return cache;
+  } catch {
+    return {};
+  }
+}
+
+// 1) 전국 지점 + 주소 + 본체 취급 여부 수집 (병렬)
 const byArea = {};
 for (const area of AREAS) {
   const mks = await getMarkets(area);
@@ -68,6 +127,55 @@ for (const area of AREAS) {
 
 const today = new Date().toISOString().slice(0, 10);
 const total = Object.values(byArea).reduce((n, r) => n + r.length, 0);
+const allRows = Object.values(byArea).flat();
+
+// 2) 좌표 지오코딩 (순차, 1req/s). 캐시에 있으면 건너뛴다
+const cache = await loadCoordCache();
+let geocoded = 0;
+let approxCount = 0;
+let failCount = 0;
+for (const r of allRows) {
+  if (cache[r.code]) {
+    r.lat = cache[r.code].lat;
+    r.lng = cache[r.code].lng;
+    continue;
+  }
+  const g = await geocode(r.addr, `${r.district}`);
+  if (g) {
+    r.lat = g.lat;
+    r.lng = g.lng;
+    geocoded++;
+    if (g.approx) {
+      approxCount++;
+      console.error(`  ~ 근사좌표(구/군): ${r.name} (${r.code}) ${r.addr}`);
+    }
+  } else {
+    failCount++;
+    console.error(`  ✗ 좌표 실패: ${r.name} (${r.code}) ${r.addr}`);
+  }
+}
+console.error(`지오코딩: 신규 ${geocoded} · 근사 ${approxCount} · 실패 ${failCount} · 캐시 ${allRows.length - geocoded - failCount}`);
+
+// 3) markets.json 생성 (전국 + 좌표 + notify + hasBody). 좌표 있는 지점만
+const markets = allRows
+  .filter((r) => typeof r.lat === "number")
+  .map((r) => ({
+    code: r.code,
+    name: r.name,
+    address: r.addr,
+    lat: Number(r.lat.toFixed(6)),
+    lng: Number(r.lng.toFixed(6)),
+    notify: NOTIFY_CODES.has(r.code),
+    hasBody: r.body,
+  }));
+await writeFile(
+  new URL("../markets.json", import.meta.url),
+  `${JSON.stringify(markets, null, 2)}\n`,
+  "utf-8",
+);
+console.error(
+  `markets.json: ${markets.length}개 (알림 ${markets.filter((m) => m.notify).length} · 본체취급 ${markets.filter((m) => m.hasBody).length})`,
+);
 
 let md = `# 롯데마트 지점 참조 (스위치2 재고 워처)
 
