@@ -30,6 +30,7 @@
     /* 지속시간 막대 */
     .bars { display:grid; gap:6px; }
     .bar-row { display:grid; grid-template-columns:120px 1fr 40px; gap:8px; align-items:center; font-size:12px; }
+    #stock .bar-row { grid-template-columns:130px 1fr auto; }
     .bar { height:16px; background:var(--blue); border-radius:3px; min-width:2px; }
     /* 타임라인 */
     .tl-row { display:grid; grid-template-columns:110px 1fr; gap:8px; align-items:center; font-size:12px; margin-bottom:5px; }
@@ -53,6 +54,11 @@
       <h2>주간 입고 히트맵</h2>
       <div class="desc">요일 × 시간대별 입고(재입고) 발생 횟수. 색이 진할수록 자주 입고됨 (현지 시간 기준)</div>
       <div id="heat"></div>
+    </div>
+    <div class="card">
+      <h2>지점별 입고 규모</h2>
+      <div class="desc">한 번 입고 시 몇 개가 들어오는지(평균·최대). 물량이 많을수록 오픈런 성공 확률이 높다</div>
+      <div id="stock"></div>
     </div>
     <div class="card">
       <h2>입고 지속시간</h2>
@@ -79,6 +85,7 @@
       if (val === "__notify") evs = events.filter((e) => notifySet.has(e.code));
       else if (val && val !== "__all") evs = events.filter((e) => e.code === val);
       renderHeatmap(evs);
+      renderStock(evs);
       renderDuration(evs);
       renderTimeline(evs);
       const times = evs.map((e) => +new Date(e.t)).filter(Boolean);
@@ -127,6 +134,25 @@
           const c = grid[d][h], a = c ? 0.15 + 0.85 * (c / max) : 0;
           html += `<div class="cell" style="background:${c ? `rgba(46,204,113,${a})` : "#eef1f4"}" title="${DAYS[d]} ${h}시: ${c}회"></div>`;
         }
+      }
+      el.innerHTML = html + "</div>";
+    }
+
+    function renderStock(evs) {
+      const by = {};
+      for (const e of evs)
+        if (e.type === "restock" && typeof e.qty === "number") (by[e.code] ??= { name: e.name, q: [] }).q.push(e.qty);
+      const rows = Object.values(by).map((m) => {
+        const sum = m.q.reduce((a, b) => a + b, 0);
+        return { name: m.name, n: m.q.length, avg: sum / m.q.length, max: Math.max(...m.q) };
+      }).sort((a, b) => b.avg - a.avg);
+      const el = document.getElementById("stock");
+      if (!rows.length) { el.innerHTML = '<div class="empty">아직 입고 기록이 없어요.</div>'; return; }
+      const max = Math.max(...rows.map((r) => r.avg));
+      let html = '<div class="bars">';
+      for (const r of rows) {
+        const label = r.n > 1 ? `${r.avg.toFixed(1)}개 (최대 ${r.max})` : `${r.max}개`;
+        html += `<div class="bar-row" title="평균 ${r.avg.toFixed(1)} · 최대 ${r.max} · ${r.n}회 입고"><span>${r.name}</span><div class="bar" style="width:${(r.avg / max * 100).toFixed(1)}%;background:var(--green)"></div><span style="width:auto;white-space:nowrap">${label}</span></div>`;
       }
       el.innerHTML = html + "</div>";
     }
