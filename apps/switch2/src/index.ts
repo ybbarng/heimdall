@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { createLogger, createStorage } from "@heimdall/core";
 import { fetchStock } from "./api.js";
 import { detectChanges } from "./diff.js";
+import { recordEvent } from "./history.js";
 import {
   sendErrorNotification,
   sendStartupNotification,
@@ -77,6 +78,8 @@ async function checkMarket(
       log.info(
         `[${market.name}] ${change.type}: ${change.name} ${change.to.inStock ? `${change.to.qty}개` : "품절"}`,
       );
+      // 주간 패턴 시각화용으로 전 지점 변화를 이력에 남긴다
+      recordEvent(market, change, dryRun);
       // 알림 대상 지점만 Discord로 보낸다. 나머지(전국)는 지도용 상태만 갱신
       if (market.notify) {
         await sendStockNotification(config.webhookUrl, market, change, dryRun);

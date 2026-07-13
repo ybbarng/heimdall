@@ -13,10 +13,12 @@ apps/switch2/
 │   ├── api.ts      # 지점별 재고 조회 (search_product_list.asp GET)
 │   ├── parse.ts    # 부분 HTML → 상품명·재고 파싱 (정규식, 외부 파서 없음)
 │   ├── diff.ts     # 이전 재고와 비교해 입고·품절·수량변경 감지
+│   ├── history.ts  # 변화 이벤트를 data/events.jsonl에 append (주간 패턴 시각화용)
 │   ├── notify.ts   # 재고 알림 embed 빌드 (core sendDiscord로 전송)
 │   └── types.ts    # 타입 정의
 ├── scripts/collect-markets.mjs  # 전국 지점 수집 → markets.json(좌표·notify) + docs/markets.md
 ├── web/index.html  # 전국 재고 지도 대시보드 (Leaflet, state.json 시각화)
+├── web/stats.html  # 입고·품절 패턴 (히트맵·지속시간·타임라인, events.jsonl 시각화)
 └── markets.json    # 전국 지점 + 좌표 + notify + hasBody
 ```
 
@@ -53,6 +55,8 @@ GET https://company.lottemart.com/mobiledowa/inc/asp/search_product_list.asp
 - `markets.json` (커밋됨) — 전국 지점 `[{ code, name, address, lat, lng, notify, hasBody }]`.
   `collect-markets.mjs`가 생성한다. `notify:true`인 지점만 알림 대상
 - `data/state.json` (자동 생성) — 지점×상품 마지막 재고 상태. 지도가 이걸 읽는다
+- `data/events.jsonl` (자동 생성) — 재고 변화 이력(append-only). 한 줄이 한 이벤트
+  `{code,name,t,type,qty}`. type: initial/restock/soldout/qty. 통계 페이지가 이걸 읽는다
 
 ## 지점 데이터 생성·갱신
 
@@ -90,9 +94,15 @@ pnpm --filter switch2 start   # 계층 폴링 데몬 (Tier A/B)
 
 계층 폴링은 데몬(`start`)에서만 동작한다. byb.kr 서버에서 pm2/systemd로 상시 구동한다.
 
-## 지도 대시보드 (byb.kr)
+## 대시보드 (byb.kr)
 
-`web/index.html`은 빌드 없이 CDN Leaflet로 뜨는 정적 페이지다. 같은 디렉토리의
-`markets.json`(좌표·notify)과 `state.json`(재고)을 fetch해 지점 위치에 재고 수를 찍고,
-30초마다 `state.json`을 다시 읽어 갱신한다. 배포 시 웹루트에 `web/`을 두고, 그 안에
-`markets.json`과 워처의 `data/state.json`을 **symlink**로 연결한다(상세는 루트 README).
+빌드 없이 뜨는 정적 페이지 두 개다.
+
+- `web/index.html` — 전국 재고 **지도**(CDN Leaflet). `markets.json`(좌표·notify) +
+  `state.json`(재고)을 fetch해 지점 위치에 재고 수를 찍고 30초마다 갱신. 지점 클릭 시
+  네이버지도 길찾기 링크
+- `web/stats.html` — 입고·품절 **패턴**(순수 JS). `events.jsonl` + `markets.json`으로
+  주간 입고 히트맵·입고 지속시간·지점별 타임라인을 그린다
+
+배포 시 웹루트(`web/`)에 `markets.json`·`state.json`·`events.jsonl`을 워처 파일로
+**symlink** 연결한다(상세는 루트 README). 이력 패턴은 데이터가 며칠~몇 주 쌓여야 의미가 보인다.

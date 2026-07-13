@@ -62,15 +62,21 @@ pm2 save
 **전국 재고 지도**(`apps/switch2/web/index.html`)는 nginx로 서빙한다. 페이지가 같은
 디렉토리의 `markets.json`·`state.json`을 읽으므로, 웹루트에 두 파일을 symlink로 건다:
 
+nginx root를 `web/`으로 두고, 그 안에 워처 데이터를 symlink로 연결한다(웹루트를 건드리지
+않아 sudo 없이 심링크 가능). byb.kr은 apex 아래 경로로 서빙 중이다:
+
 ```bash
-# (sudo) 서브도메인 디렉토리 생성 후
-sudo ln -s /home/ybbarng/heimdall/apps/switch2/web/index.html   /srv/www/switch2/index.html
-sudo ln -s /home/ybbarng/heimdall/apps/switch2/markets.json      /srv/www/switch2/markets.json
-sudo ln -s /home/ybbarng/heimdall/apps/switch2/data/state.json   /srv/www/switch2/state.json
+# web/ 안에 데이터 심링크 (sudo 불필요)
+cd /home/ybbarng/heimdall/apps/switch2/web
+ln -sf ../markets.json markets.json
+ln -sf ../data/state.json state.json
+ln -sf ../data/events.jsonl events.jsonl
+# (sudo) apex 웹루트에서 web/을 노출
+sudo ln -s /home/ybbarng/heimdall/apps/switch2/web /srv/www/main/switch2
 ```
 
-nginx server 블록(`root /srv/www/switch2;`)과 SSL은 기존 서브도메인 방식을 따른다.
-워처가 `state.json`을 갱신할 때마다 지도가 30초 안에 자동 반영된다.
+- 지도: `https://byb.kr/switch2/` · 패턴: `https://byb.kr/switch2/stats.html`
+- 워처가 `state.json`·`events.jsonl`을 갱신하면 30초 안에 자동 반영된다
 
 ## 새 워처 추가
 

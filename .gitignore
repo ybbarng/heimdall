@@ -5,6 +5,7 @@ cases.json
 data/
 *.curl
 logs/
-# 지도 대시보드가 배포 시 웹루트에서 참조하는 데이터 심링크 (커밋 대상 아님)
+# 지도·통계 대시보드가 배포 시 참조하는 데이터 심링크 (커밋 대상 아님)
 apps/switch2/web/markets.json
 apps/switch2/web/state.json
+apps/switch2/web/events.jsonl

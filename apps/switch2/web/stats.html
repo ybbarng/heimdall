@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>스위치2 입고·품절 패턴</title>
+  <style>
+    :root { --green:#2ecc71; --gray:#95a5a6; --blue:#3498db; --ink:#2c3e50; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif; color:var(--ink); background:#f6f8fa; }
+    header { background:#fff; padding:16px 20px; box-shadow:0 1px 4px rgba(0,0,0,.08); position:sticky; top:0; z-index:10; }
+    header h1 { margin:0 0 4px; font-size:18px; }
+    header .sub { color:#667; font-size:13px; }
+    header a { color:var(--blue); text-decoration:none; }
+    .controls { margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    select { padding:6px 10px; border:1px solid #ccd; border-radius:6px; font-size:14px; }
+    main { max-width:1000px; margin:0 auto; padding:20px; display:grid; gap:20px; }
+    .card { background:#fff; border-radius:10px; padding:16px 18px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+    .card h2 { margin:0 0 4px; font-size:15px; }
+    .card .desc { color:#778; font-size:12px; margin-bottom:14px; }
+    .empty { color:#99a; font-size:13px; padding:20px 0; text-align:center; }
+    .stat-row { display:flex; gap:24px; flex-wrap:wrap; margin-bottom:12px; }
+    .stat-row .b { font-size:22px; font-weight:700; color:var(--green); }
+    .stat-row .l { font-size:12px; color:#778; }
+    /* 히트맵 */
+    .heat { display:grid; grid-template-columns:auto repeat(24,1fr); gap:2px; font-size:10px; }
+    .heat .hh { color:#99a; text-align:center; }
+    .heat .rh { color:#99a; padding-right:6px; text-align:right; white-space:nowrap; align-self:center; }
+    .heat .cell { aspect-ratio:1; border-radius:2px; background:#eef1f4; }
+    /* 지속시간 막대 */
+    .bars { display:grid; gap:6px; }
+    .bar-row { display:grid; grid-template-columns:120px 1fr 40px; gap:8px; align-items:center; font-size:12px; }
+    .bar { height:16px; background:var(--blue); border-radius:3px; min-width:2px; }
+    /* 타임라인 */
+    .tl-row { display:grid; grid-template-columns:110px 1fr; gap:8px; align-items:center; font-size:12px; margin-bottom:5px; }
+    .tl-track { position:relative; height:16px; background:#eef1f4; border-radius:3px; overflow:hidden; }
+    .tl-seg { position:absolute; top:0; height:100%; background:var(--green); opacity:.85; }
+    .tl-axis { display:grid; grid-template-columns:110px 1fr; gap:8px; font-size:10px; color:#99a; margin-top:4px; }
+    .tl-axis .ticks { display:flex; justify-content:space-between; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎮 스위치2 입고·품절 패턴</h1>
+    <div class="sub">본체(닌텐도 스위치 2) 전국 재고 이력 · <a href="./">← 재고 지도</a></div>
+    <div class="controls">
+      <label>지점 <select id="filter"></select></label>
+      <span class="sub" id="range"></span>
+    </div>
+  </header>
+  <main>
+    <div class="card">
+      <h2>주간 입고 히트맵</h2>
+      <div class="desc">요일 × 시간대별 입고(재입고) 발생 횟수. 색이 진할수록 자주 입고됨 (현지 시간 기준)</div>
+      <div id="heat"></div>
+    </div>
+    <div class="card">
+      <h2>입고 지속시간</h2>
+      <div class="desc">입고된 뒤 품절까지 걸린 시간 분포. "입고되면 얼마나 빨리 빠지는가"</div>
+      <div id="dur"></div>
+    </div>
+    <div class="card">
+      <h2>지점별 타임라인 (최근 14일)</h2>
+      <div class="desc">초록 = 재고가 있던 구간. 지점별 입고↔품절 이력</div>
+      <div id="tl"></div>
+    </div>
+  </main>
+
+  <script>
+    const DAYS = ["일","월","화","수","목","금","토"];
+    const HOUR = 3600e3, DAY = 24 * HOUR;
+
+    const parseJsonl = (t) => t.split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+
+    let events = [], markets = [], notifySet = new Set();
+
+    function applyFilter(val) {
+      let evs = events;
+      if (val === "__notify") evs = events.filter((e) => notifySet.has(e.code));
+      else if (val && val !== "__all") evs = events.filter((e) => e.code === val);
+      renderHeatmap(evs);
+      renderDuration(evs);
+      renderTimeline(evs);
+      const times = evs.map((e) => +new Date(e.t)).filter(Boolean);
+      const rng = document.getElementById("range");
+      if (times.length) {
+        const a = new Date(Math.min(...times)), b = new Date(Math.max(...times));
+        rng.textContent = `${evs.length}건 · ${a.toLocaleDateString("ko-KR")} ~ ${b.toLocaleDateString("ko-KR")}`;
+      } else rng.textContent = "이력 없음";
+    }
+
+    // 지점별 시간순 이벤트 → 재고 구간 [{start, end|null, startType}]
+    function segmentsByMarket(evs) {
+      const byCode = {};
+      for (const e of evs) (byCode[e.code] ??= []).push(e);
+      const result = {};
+      for (const [code, list] of Object.entries(byCode)) {
+        list.sort((a, b) => new Date(a.t) - new Date(b.t));
+        const segs = [];
+        let open = null;
+        for (const e of list) {
+          if ((e.type === "restock" || e.type === "initial") && !open) {
+            open = { start: +new Date(e.t), startType: e.type };
+          } else if (e.type === "soldout" && open) {
+            open.end = +new Date(e.t);
+            segs.push(open); open = null;
+          }
+        }
+        if (open) { open.end = null; segs.push(open); } // 아직 재고 있음
+        result[code] = { name: list[0].name, segs };
+      }
+      return result;
+    }
+
+    function renderHeatmap(evs) {
+      const grid = Array.from({ length: 7 }, () => new Array(24).fill(0));
+      let total = 0;
+      for (const e of evs) if (e.type === "restock") { const d = new Date(e.t); grid[d.getDay()][d.getHours()]++; total++; }
+      const el = document.getElementById("heat");
+      if (!total) { el.innerHTML = '<div class="empty">아직 재입고 이력이 없어요. 데이터가 쌓이면 요일·시간대 패턴이 보입니다.</div>'; return; }
+      const max = Math.max(...grid.flat());
+      let html = '<div class="heat"><div></div>';
+      for (let h = 0; h < 24; h++) html += `<div class="hh">${h % 3 === 0 ? h : ""}</div>`;
+      for (let d = 0; d < 7; d++) {
+        html += `<div class="rh">${DAYS[d]}</div>`;
+        for (let h = 0; h < 24; h++) {
+          const c = grid[d][h], a = c ? 0.15 + 0.85 * (c / max) : 0;
+          html += `<div class="cell" style="background:${c ? `rgba(46,204,113,${a})` : "#eef1f4"}" title="${DAYS[d]} ${h}시: ${c}회"></div>`;
+        }
+      }
+      el.innerHTML = html + "</div>";
+    }
+
+    function renderDuration(evs) {
+      const durs = [];
+      for (const { segs } of Object.values(segmentsByMarket(evs)))
+        for (const s of segs) if (s.startType === "restock" && s.end) durs.push((s.end - s.start) / HOUR);
+      const el = document.getElementById("dur");
+      if (!durs.length) { el.innerHTML = '<div class="empty">입고→품절이 한 번이라도 관측되면 여기 분포가 그려집니다.</div>'; return; }
+      durs.sort((a, b) => a - b);
+      const avg = durs.reduce((s, x) => s + x, 0) / durs.length;
+      const med = durs[Math.floor(durs.length / 2)];
+      const fmt = (h) => h < 1 ? `${Math.round(h * 60)}분` : h < 48 ? `${h.toFixed(1)}시간` : `${(h / 24).toFixed(1)}일`;
+      // 구간 히스토그램
+      const buckets = [[0,1,"1시간↓"],[1,3,"1~3h"],[3,6,"3~6h"],[6,12,"6~12h"],[12,24,"12~24h"],[24,72,"1~3일"],[72,1e9,"3일↑"]];
+      const counts = buckets.map(([lo,hi]) => durs.filter((d) => d >= lo && d < hi).length);
+      const max = Math.max(...counts, 1);
+      let html = `<div class="stat-row"><div><div class="b">${fmt(med)}</div><div class="l">중앙값</div></div>`;
+      html += `<div><div class="b">${fmt(avg)}</div><div class="l">평균</div></div>`;
+      html += `<div><div class="b">${durs.length}</div><div class="l">입고→품절 관측</div></div></div><div class="bars">`;
+      buckets.forEach(([,,label], i) => {
+        html += `<div class="bar-row"><span>${label}</span><div class="bar" style="width:${(counts[i]/max*100).toFixed(1)}%"></div><span>${counts[i]}</span></div>`;
+      });
+      el.innerHTML = html + "</div>";
+    }
+
+    function renderTimeline(evs) {
+      const now = Date.now(), from = now - 14 * DAY;
+      const rows = [];
+      for (const { name, segs } of Object.values(segmentsByMarket(evs))) {
+        const vis = segs.map((s) => ({ start: Math.max(s.start, from), end: (s.end ?? now) })).filter((s) => s.end > from && s.end > s.start);
+        if (vis.length) rows.push({ name, vis });
+      }
+      const el = document.getElementById("tl");
+      if (!rows.length) { el.innerHTML = '<div class="empty">최근 14일 재고 구간이 아직 없어요.</div>'; return; }
+      rows.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+      const span = now - from;
+      let html = "";
+      for (const { name, vis } of rows) {
+        let segs = "";
+        for (const s of vis) {
+          const left = (s.start - from) / span * 100, w = (s.end - s.start) / span * 100;
+          segs += `<div class="tl-seg" style="left:${left}%;width:${Math.max(w,0.5)}%"></div>`;
+        }
+        html += `<div class="tl-row"><span>${name}</span><div class="tl-track">${segs}</div></div>`;
+      }
+      // 날짜 축 (14일 → 대략 눈금)
+      let ticks = "";
+      for (let i = 0; i <= 14; i += 2) { const d = new Date(from + i * DAY); ticks += `<span>${d.getMonth()+1}/${d.getDate()}</span>`; }
+      html += `<div class="tl-axis"><span></span><div class="ticks">${ticks}</div></div>`;
+      el.innerHTML = html;
+    }
+
+    async function init() {
+      const [evText, mk] = await Promise.all([
+        fetch("events.jsonl?" + Date.now()).then((r) => r.ok ? r.text() : "").catch(() => ""),
+        fetch("markets.json").then((r) => r.json()).catch(() => []),
+      ]);
+      events = parseJsonl(evText);
+      markets = mk;
+      notifySet = new Set(markets.filter((m) => m.notify).map((m) => m.code));
+      // 필터 옵션: 전국 / 관심 14곳 / 이벤트 등장 지점
+      const seen = new Map();
+      for (const e of events) if (!seen.has(e.code)) seen.set(e.code, e.name);
+      const sel = document.getElementById("filter");
+      let opts = `<option value="__all">전국 (${seen.size}곳)</option><option value="__notify">관심 지점(알림 대상)</option>`;
+      for (const [code, name] of [...seen].sort((a, b) => a[1].localeCompare(b[1], "ko"))) opts += `<option value="${code}">${name}</option>`;
+      sel.innerHTML = opts;
+      sel.onchange = () => applyFilter(sel.value);
+      applyFilter("__all");
+      // 30초마다 최신 이력 반영
+      setInterval(async () => {
+        const t = await fetch("events.jsonl?" + Date.now()).then((r) => r.ok ? r.text() : "").catch(() => "");
+        if (t) { events = parseJsonl(t); applyFilter(sel.value); }
+      }, 30000);
+    }
+    init();
+  </script>
+</body>
+</html>
