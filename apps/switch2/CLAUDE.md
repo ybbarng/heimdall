@@ -50,8 +50,10 @@ GET https://company.lottemart.com/mobiledowa/inc/asp/search_product_list.asp
 
 ## 설정 파일
 
-- `.env` (gitignore) — DISCORD_WEBHOOK_URL, POLL_NOTIFY_SECONDS, POLL_ALL_SECONDS,
-  FAIL_ALERT_THRESHOLD, SEARCH_WORD, TARGET_PRODUCTS
+- `.env` (gitignore) — ALERTS_ENABLED, DISCORD_WEBHOOK_URL, POLL_NOTIFY_SECONDS,
+  POLL_ALL_SECONDS, FAIL_ALERT_THRESHOLD, SEARCH_WORD, TARGET_PRODUCTS
+  · `ALERTS_ENABLED=false`면 Discord 알림은 끄고 전국 재고 수집·지도·통계만 돌린다
+  (구매 완료 후 지도만 유지할 때). 이때 웹훅 URL은 없어도 된다
 - `markets.json` (커밋됨) — 전국 지점 `[{ code, name, address, lat, lng, notify, hasBody }]`.
   `collect-markets.mjs`가 생성한다. `notify:true`인 지점만 알림 대상
 - `data/state.json` (자동 생성) — 지점×상품 마지막 재고 상태. 지도가 이걸 읽는다

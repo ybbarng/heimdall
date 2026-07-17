@@ -21,9 +21,11 @@ const log = createLogger("switch2", new URL("../../../logs/", import.meta.url));
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function loadEnv(dryRun: boolean) {
+  // 알림을 끄면(ALERTS_ENABLED=false) 전국 재고 수집·지도·통계만 돌고 Discord 전송은 안 한다
+  const alertsEnabled = process.env["ALERTS_ENABLED"] !== "false";
   const webhookUrl = process.env["DISCORD_WEBHOOK_URL"];
-  // dry-run에서는 실제 전송을 안 하므로 웹훅 URL이 없어도 된다
-  if (!webhookUrl && !dryRun) {
+  // 알림을 켠 상태에서만 웹훅이 필요하다 (dry-run·알림 off면 없어도 됨)
+  if (!webhookUrl && !dryRun && alertsEnabled) {
     throw new Error("DISCORD_WEBHOOK_URL 환경변수가 설정되지 않았습니다.");
   }
 
@@ -39,6 +41,7 @@ function loadEnv(dryRun: boolean) {
 
   return {
     webhookUrl: webhookUrl ?? "",
+    alertsEnabled,
     notifySeconds,
     allSeconds,
     failThreshold,
@@ -55,6 +58,7 @@ async function loadMarkets(): Promise<Market[]> {
 
 interface Config {
   webhookUrl: string;
+  alertsEnabled: boolean;
   failThreshold: number;
   searchWord: string;
   targetNames: string[];
@@ -80,8 +84,8 @@ async function checkMarket(
       );
       // 주간 패턴 시각화용으로 전 지점 변화를 이력에 남긴다
       recordEvent(market, change, dryRun);
-      // 알림 대상 지점만 Discord로 보낸다. 나머지(전국)는 지도용 상태만 갱신
-      if (market.notify) {
+      // 알림 대상 지점만 Discord로 보낸다(알림 on일 때). 나머지는 지도용 상태만 갱신
+      if (market.notify && config.alertsEnabled) {
         await sendStockNotification(config.webhookUrl, market, change, dryRun);
       }
     }
@@ -100,8 +104,8 @@ async function checkMarket(
     const failCount = (prev?.failCount ?? 0) + 1;
     log.error(`[${market.name}] 조회 실패(${failCount}회): ${message}`);
 
-    // 알림 지점만, 연속 실패가 임계값에 닿을 때만 오류 알림(시끄럽지 않게)
-    if (market.notify && failCount === config.failThreshold) {
+    // 알림 지점만(알림 on일 때), 연속 실패가 임계값에 닿을 때만 오류 알림
+    if (market.notify && config.alertsEnabled && failCount === config.failThreshold) {
       await sendErrorNotification(
         config.webhookUrl,
         market.name,
@@ -152,6 +156,7 @@ async function main() {
   const env = loadEnv(dryRun);
   const config: Config = {
     webhookUrl: env.webhookUrl,
+    alertsEnabled: env.alertsEnabled,
     failThreshold: env.failThreshold,
     searchWord: env.searchWord,
     targetNames: env.targetNames,
@@ -179,9 +184,12 @@ async function main() {
   }
 
   log.info(
-    `계층 폴링 시작: 알림 ${notifyMarkets.length}곳 ${env.notifySeconds}초 / 전국 ${restMarkets.length}곳 ${env.allSeconds}초`,
+    `계층 폴링 시작: 알림 ${notifyMarkets.length}곳 ${env.notifySeconds}초 / 전국 ${restMarkets.length}곳 ${env.allSeconds}초 · Discord 알림 ${env.alertsEnabled ? "ON" : "OFF(재고 수집만)"}`,
   );
-  await sendStartupNotification(env.webhookUrl, notifyMarkets, dryRun);
+  // 알림이 꺼져 있으면 시작 알림도 보내지 않는다
+  if (env.alertsEnabled) {
+    await sendStartupNotification(env.webhookUrl, notifyMarkets, dryRun);
+  }
 
   // 즉시 전국 1회 (지도·상태 초기화)
   await pollTier("init", bodyMarkets, state, config, dryRun);
