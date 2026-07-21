@@ -78,6 +78,24 @@ sudo ln -s /home/ybbarng/heimdall/apps/switch2/web /srv/www/main/switch2
 - 지도: `https://byb.kr/switch2/` · 패턴: `https://byb.kr/switch2/stats.html`
 - 워처가 `state.json`·`events.jsonl`을 갱신하면 30초 안에 자동 반영된다
 
+#### switch2 완전 제거 (스위치2 관심이 끝났을 때)
+
+지도·통계까지 다 걷어낼 때 서버에서 아래 순서로 정리한다. 데몬 → 웹 노출 → 코드 순.
+
+```bash
+# 1) 데몬 중지·삭제 (pm2 프로세스명 switch2, scourt는 cron이라 무관)
+pm2 delete switch2 && pm2 save
+# 2) nginx 노출 심링크 제거 (root 소유라 sudo)
+sudo rm /srv/www/main/switch2
+# 3) 코드·데이터 삭제 (data/ 안에 state.json·events.jsonl 이력이 있으니 필요하면 먼저 백업)
+cd /home/ybbarng/heimdall && git rm -r apps/switch2 && rm -rf apps/switch2/data
+git commit -m "switch2 워처 제거" && git push
+pnpm install    # workspace에서 switch2 정리
+```
+
+- web/ 안 데이터 심링크(`markets.json`·`state.json`·`events.jsonl`)는 `apps/switch2`를 지우면 같이 사라진다
+- scourt 등 다른 워처는 건드리지 않는다. core는 계속 쓰이므로 `packages/core`는 남긴다
+
 ## 새 워처 추가
 
 1. `apps/<이름>/` 에 `package.json`(`@heimdall/core` 의존), `tsconfig.json`, `src/index.ts` 생성
