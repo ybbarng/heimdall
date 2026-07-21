@@ -5,7 +5,6 @@
     "address": "서울 광진구 광나루로 56길 85 테크노마트 B2",
     "lat": 37.53548,
     "lng": 127.095743,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -14,7 +13,6 @@
     "address": "서울 금천구 시흥대로291, 지하1층(독산동)",
     "lat": 37.4565,
     "lng": 126.8954,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -23,7 +21,6 @@
     "address": "서울 강서구 하늘길 38 (방화동)",
     "lat": 37.563215,
     "lng": 126.80311,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -32,7 +29,6 @@
     "address": "서울 강북구 삼양로 247(미아동)",
     "lat": 37.634575,
     "lng": 127.018117,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -41,7 +37,6 @@
     "address": "서울 중구 한강대로 405 (봉래동2가)",
     "lat": 37.555521,
     "lng": 126.973861,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -50,7 +45,6 @@
     "address": "서울 서초구 서초대로 38길 12 롯데마트 서초점 (서초동 1498-5)",
     "lat": 37.490048,
     "lng": 127.005695,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -59,7 +53,6 @@
     "address": "서울 송파구 중대로 80 (문정동)",
     "lat": 37.491746,
     "lng": 127.11778,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -68,7 +61,6 @@
     "address": "서울 영등포구 선유로 138",
     "lat": 37.526068,
     "lng": 126.891576,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -77,7 +69,6 @@
     "address": "서울 송파구 올림픽로 300(신천동)",
     "lat": 37.513742,
     "lng": 127.104247,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -86,7 +77,6 @@
     "address": "서울 은평구 통일로 1050(진관동 80-25)",
     "lat": 37.637178,
     "lng": 126.917967,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -95,7 +85,6 @@
     "address": "서울 은평구 통일로 1050(진관동 80-25)",
     "lat": 37.637178,
     "lng": 126.917967,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -104,7 +93,6 @@
     "address": "서울 송파구 올림픽로 240(잠실동 롯데마트)",
     "lat": 37.511106,
     "lng": 127.098244,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -113,7 +101,6 @@
     "address": "서울 송파구 올림픽로 240(잠실동 롯데마트)",
     "lat": 37.511106,
     "lng": 127.098244,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -122,7 +109,6 @@
     "address": "서울 노원구 노원로 330 (중계동)",
     "lat": 37.646795,
     "lng": 127.070944,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -131,7 +117,6 @@
     "address": "서울 노원구 노원로 330 (중계동)",
     "lat": 37.646795,
     "lng": 127.070944,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -140,7 +125,6 @@
     "address": "서울 동대문구 왕산로 214 4층(전농동)",
     "lat": 37.580669,
     "lng": 127.048208,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -149,7 +133,6 @@
     "address": "서울 성동구 행당로 84(행당동, 한진타운 상가 롯데마트 )지하2,3층",
     "lat": 37.556629,
     "lng": 127.028861,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -158,7 +141,6 @@
     "address": "서울 금천구 두산로 71 (독산동)",
     "lat": 37.470584,
     "lng": 126.895648,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -167,7 +149,6 @@
     "address": "서울 영등포구 영중로 125 (62-1번지 )",
     "lat": 37.527817,
     "lng": 126.904734,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -176,7 +157,6 @@
     "address": "서울 강동구 올림픽로78길 60 상가 B1층",
     "lat": 37.540973,
     "lng": 127.128499,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -185,7 +165,6 @@
     "address": "경기 구리시 동구릉로 136번길 57 (인창동)",
     "lat": 37.610665,
     "lng": 127.138336,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -194,7 +173,6 @@
     "address": "경기 양평군 양평읍 남북로 76 롯데마트 양평점 (공흥리 468-33)",
     "lat": 37.4916,
     "lng": 127.4875,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -203,7 +181,6 @@
     "address": "경기 고양시 덕양구 충장로 150 (행신동)",
     "lat": 37.658186,
     "lng": 126.831945,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -212,7 +189,6 @@
     "address": "경기 수원시 영통구 이의동  센트럴타운로 85 지하1층 롯데마트 광교점",
     "lat": 37.290515,
     "lng": 127.050585,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -221,7 +197,6 @@
     "address": "경기도 수원시 영통구 이의동 센트럴타운로 85 지하1층 롯데마트 광교점",
     "lat": 37.291571,
     "lng": 127.050459,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -230,7 +205,6 @@
     "address": "경기 수원시 권선구 동수원로 232 (권선동)",
     "lat": 37.250302,
     "lng": 127.034726,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -239,7 +213,6 @@
     "address": "경기 김포시 김포한강2로 41(장기동 2031번지)",
     "lat": 37.640367,
     "lng": 126.676963,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -248,7 +221,6 @@
     "address": "경기 남양주시 와부읍  월문천로 33",
     "lat": 37.592422,
     "lng": 127.230719,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -257,7 +229,6 @@
     "address": "경기 동두천시 평화로 2169번길 21 (송내동 551)",
     "lat": 37.903086,
     "lng": 127.060518,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -266,7 +237,6 @@
     "address": "경기도 용인시 수지구 성복2로 38(성복동)",
     "lat": 37.312505,
     "lng": 127.081772,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -275,7 +245,6 @@
     "address": "경기도 용인시 수지구 성복2로 38(성복동)",
     "lat": 37.312505,
     "lng": 127.081772,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -284,7 +253,6 @@
     "address": "경기 남양주시 화도읍 경춘로 1992",
     "lat": 37.651411,
     "lng": 127.303752,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -293,7 +261,6 @@
     "address": "경기 안산시 상록구 반석로 8 (본오동)",
     "lat": 37.321715,
     "lng": 126.83086,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -302,7 +269,6 @@
     "address": "경기 안산시 단원구 달미로 64(선부동)",
     "lat": 37.321715,
     "lng": 126.83086,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -311,7 +277,6 @@
     "address": "경기 수원시 권선구 세화로 134(서둔동)",
     "lat": 37.263332,
     "lng": 127.028747,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -320,7 +285,6 @@
     "address": "경기도 광명시 일직로 17 롯데몰 광명점 2층 토이저러스",
     "lat": 37.424365,
     "lng": 126.88279,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -329,7 +293,6 @@
     "address": "경기 시흥시 마유로 238번길 26 (정왕동)",
     "lat": 37.33548,
     "lng": 126.734343,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -338,7 +301,6 @@
     "address": "경기 시흥시 서울대학로 278번길 67 (배곧동 202)",
     "lat": 37.369372,
     "lng": 126.727659,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -347,7 +309,6 @@
     "address": "경기 시흥시 비둘기공원로 28 (대야동)",
     "lat": 37.444015,
     "lng": 126.791266,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -356,7 +317,6 @@
     "address": "경기도 용인시 기흥구 중부대로 375 (지하1층)",
     "lat": 37.271657,
     "lng": 127.108295,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -365,7 +325,6 @@
     "address": "경기 안산시 상록구 항가울로 422(성포동)",
     "lat": 37.317922,
     "lng": 126.846752,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -374,7 +333,6 @@
     "address": "경기 안성시 공도읍 서동대로 4478",
     "lat": 37.00799,
     "lng": 127.199794,
-    "notify": true,
     "hasBody": false
   },
   {
@@ -383,7 +341,6 @@
     "address": "경기 오산시 경기대로 271 (오산동)",
     "lat": 37.127034,
     "lng": 127.067026,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -392,7 +349,6 @@
     "address": "경기 의왕시 계원대학로 7 (내손동)",
     "lat": 37.380566,
     "lng": 126.972909,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -401,7 +357,6 @@
     "address": "경기 이천시 구만리로 191 (안흥동, 롯데캐슬골드스카이) 롯데마트",
     "lat": 37.274577,
     "lng": 127.454629,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -410,7 +365,6 @@
     "address": "경기 의정부시 장곡로 224 (장암동)",
     "lat": 37.74821,
     "lng": 127.061857,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -419,7 +373,6 @@
     "address": "경기 고양시 일산서구 중앙로 1496 (주엽동, 문촌마을11단지)",
     "lat": 37.667728,
     "lng": 126.76596,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -428,7 +381,6 @@
     "address": "경기 수원시 장안구 만석로 19번길 25 -10 (천천동)",
     "lat": 37.296195,
     "lng": 126.982277,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -437,7 +389,6 @@
     "address": "경기도 용인시 기흥구 신고매로 124 기흥롯데프리미엄아울렛 2층 토이저러스 기흥점",
     "lat": 37.225083,
     "lng": 127.120766,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -446,7 +397,6 @@
     "address": "경기도 이천시 호법면 프리미엄아웃렛로 177-74(롯데프리미엄아울렛 이천점 내 B블럭 2층 토이저러스 이천점)",
     "lat": 37.280882,
     "lng": 127.442913,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -455,7 +405,6 @@
     "address": "경기도 파주시 문발로 302, A블럭 3층 토이저러스 파주점(문발동, 롯데프리미엄아울렛 파주점)",
     "lat": 37.719822,
     "lng": 126.693132,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -464,7 +413,6 @@
     "address": "경기 성남시 분당구 대왕판교로 606번길 58 (삼평동)",
     "lat": 37.395508,
     "lng": 127.113614,
-    "notify": true,
     "hasBody": true
   },
   {
@@ -473,7 +421,6 @@
     "address": "경기 평택시 평택5로 30 (합정동)",
     "lat": 36.988454,
     "lng": 127.111789,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -482,7 +429,6 @@
     "address": "경기 고양시 덕양구 화중로 66 (화정동)",
     "lat": 37.658186,
     "lng": 126.831945,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -491,7 +437,6 @@
     "address": "인천 서구 원당대로 581 (마전동)",
     "lat": 37.594474,
     "lng": 126.66454,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -500,7 +445,6 @@
     "address": "인천 계양구 장제로 822 (계산동)",
     "lat": 37.541081,
     "lng": 126.736131,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -509,7 +453,6 @@
     "address": "인천 부평구 광장로 16",
     "lat": 37.490599,
     "lng": 126.724394,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -518,7 +461,6 @@
     "address": "인천 부평구 마장로 296 (산곡동)",
     "lat": 37.515274,
     "lng": 126.704122,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -527,7 +469,6 @@
     "address": "인천 부평구 길주로 623 (삼산동)",
     "lat": 37.507214,
     "lng": 126.729369,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -536,7 +477,6 @@
     "address": "인천 연수구 컨벤시아대로 177",
     "lat": 37.388431,
     "lng": 126.643408,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -545,7 +485,6 @@
     "address": "인천 연수구 청능대로 87 (청학동)",
     "lat": 37.415276,
     "lng": 126.675157,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -554,7 +493,6 @@
     "address": "인천 중구 흰바위로 51 (운서동)",
     "lat": 37.492563,
     "lng": 126.491181,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -563,7 +501,6 @@
     "address": "인천 서구 청라커낼로 252",
     "lat": 37.530854,
     "lng": 126.646757,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -572,7 +509,6 @@
     "address": "강원도 춘천시 세실로 108 (석사동)",
     "lat": 37.866741,
     "lng": 127.758849,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -581,7 +517,6 @@
     "address": "강원도 원주시 봉화로 1",
     "lat": 37.345617,
     "lng": 127.927636,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -590,7 +525,6 @@
     "address": "강원도 춘천시 방송길 84 (온의동)",
     "lat": 37.868514,
     "lng": 127.721421,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -599,7 +533,6 @@
     "address": "충북 청주시 상당구 용암북로 160번길 60 (용암동)",
     "lat": 36.621522,
     "lng": 127.515557,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -608,7 +541,6 @@
     "address": "충북 청주시 흥덕구 2순환로 1004 (비하동)",
     "lat": 36.663267,
     "lng": 127.458701,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -617,7 +549,6 @@
     "address": "충북 제천시 용두대로 111 (하소동)",
     "lat": 37.149629,
     "lng": 128.125137,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -626,7 +557,6 @@
     "address": "충북 청주시 흥덕구 풍산로 15",
     "lat": 36.642117,
     "lng": 127.489174,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -635,7 +565,6 @@
     "address": "충북 충주시 봉계1길 49(칠금동)",
     "lat": 36.981507,
     "lng": 127.914353,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -644,7 +573,6 @@
     "address": "충남 당진시 정안로 20(원당동)",
     "lat": 36.909248,
     "lng": 126.650762,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -653,7 +581,6 @@
     "address": "충남 서산시 충의로 27 (예천동)",
     "lat": 36.77325,
     "lng": 126.439329,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -662,7 +589,6 @@
     "address": "충남 천안시 서북구 성정두정로 1 (성정동)",
     "lat": 36.826307,
     "lng": 127.14009,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -671,7 +597,6 @@
     "address": "충남 아산시 모종동 555-5",
     "lat": 36.78995,
     "lng": 127.002677,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -680,7 +605,6 @@
     "address": "충남 홍성군 홍성읍 조양로 247번길 9",
     "lat": 36.60105,
     "lng": 126.661167,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -689,7 +613,6 @@
     "address": "대전광역시 유성구 북유성대로 206 (하기동)",
     "lat": 36.384388,
     "lng": 127.32159,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -698,7 +621,6 @@
     "address": "대전광역시 유성구 테크노중앙로 14 (관평동)",
     "lat": 36.427088,
     "lng": 127.386992,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -707,7 +629,6 @@
     "address": "대전광역시 유성구 유성대로 26-37 (원내동)",
     "lat": 36.356537,
     "lng": 127.331306,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -716,7 +637,6 @@
     "address": "경북 구미시 구미대로 22길 11 (신평동)",
     "lat": 36.11374,
     "lng": 128.364438,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -725,7 +645,6 @@
     "address": "경북 김천시 신음동 시청로 80",
     "lat": 36.139803,
     "lng": 128.113953,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -734,7 +653,6 @@
     "address": "경북 포항시 남구 지곡로 237 롯데마트 포항점",
     "lat": 36.018932,
     "lng": 129.342938,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -743,7 +661,6 @@
     "address": "경남 거제시 옥포동 서간도길 9-9",
     "lat": 34.88803,
     "lng": 128.691359,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -752,7 +669,6 @@
     "address": "경남 김해시 김해대로2330 롯데마트 김해점",
     "lat": 35.227911,
     "lng": 128.889538,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -761,7 +677,6 @@
     "address": "경남 창원시 성산구 중앙대로 123(중앙동)",
     "lat": 35.219078,
     "lng": 128.676199,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -770,7 +685,6 @@
     "address": "경남 창원시 마산합포구 신마산시장길 33 (창포동3가)",
     "lat": 35.181064,
     "lng": 128.559988,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -779,7 +693,6 @@
     "address": "경남 창원시 마산회원구 내서읍 경남대로 927",
     "lat": 35.215029,
     "lng": 128.507757,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -788,7 +701,6 @@
     "address": "경남 창원시 성산구 원이대로 320(대원동)",
     "lat": 35.240216,
     "lng": 128.653581,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -797,7 +709,6 @@
     "address": "경남 창원시 마산회원구 삼호로",
     "lat": 35.223816,
     "lng": 128.581736,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -806,7 +717,6 @@
     "address": "경남 양산시 삼호1길 34 롯데마트 웅상점",
     "lat": 35.412679,
     "lng": 129.167042,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -815,7 +725,6 @@
     "address": "경상남도 김해시 번화1로 56번길 15 롯데마트 장유점",
     "lat": 35.227911,
     "lng": 128.889538,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -824,7 +733,6 @@
     "address": "경남 진주시 동진로 440(충무공동)",
     "lat": 35.178531,
     "lng": 128.155548,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -833,7 +741,6 @@
     "address": "경남 창원시 진해구 진해대로 762 (석동)",
     "lat": 35.115147,
     "lng": 128.802766,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -842,7 +749,6 @@
     "address": "경남 통영시 무전대로 65 (무전동)",
     "lat": 34.859739,
     "lng": 128.421885,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -851,7 +757,6 @@
     "address": "대구광역시 동구 안심로 80(율하동) 지하 1층",
     "lat": 35.868453,
     "lng": 128.693271,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -860,7 +765,6 @@
     "address": "대구광역시 동구 안심로 80 (율하동) 2층",
     "lat": 35.868453,
     "lng": 128.693271,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -869,7 +773,6 @@
     "address": "대구광역시 달서구 달구벌대로 1567 롯데하이마트 죽전점 3층(죽전동)",
     "lat": 35.859368,
     "lng": 128.563814,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -878,7 +781,6 @@
     "address": "부산시 중구 중앙대로2 롯데마트 광복점",
     "lat": 37.563656,
     "lng": 126.99751,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -887,7 +789,6 @@
     "address": "부산광역시 동래구 중앙대로 1393 롯데마트 동래점",
     "lat": 35.202834,
     "lng": 129.077854,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -896,7 +797,6 @@
     "address": "부산시 기장군 기장읍 기장해안로 147 롯데프리미엄아울렛 쇼핑몰 2층",
     "lat": 35.192307,
     "lng": 129.212552,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -905,7 +805,6 @@
     "address": "부산시 기장군 기장읍 기장해안로 147 롯데프리미엄아울렛 쇼핑몰 3층",
     "lat": 35.192307,
     "lng": 129.212552,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -914,7 +813,6 @@
     "address": "부산 부산진구 신천대로 241 롯데마트 부산점",
     "lat": 35.159414,
     "lng": 129.05014,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -923,7 +821,6 @@
     "address": "부산광역시 사상구 낙동대로733 롯데마트 사상점",
     "lat": 35.1521,
     "lng": 128.9911,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -932,7 +829,6 @@
     "address": "부산시 사하구 을숙도대로610 롯데마트 사하점",
     "lat": 35.1041,
     "lng": 128.9751,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -941,7 +837,6 @@
     "address": "부산광역시 북구 화명대로 47 롯데마트 화명점",
     "lat": 35.242893,
     "lng": 129.054374,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -950,7 +845,6 @@
     "address": "울산광역시 남구 삼산로 74 롯데마트 울산점",
     "lat": 35.539879,
     "lng": 129.34921,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -959,7 +853,6 @@
     "address": "울산광역시 북구 진장유통로 64 롯데마트 진장점",
     "lat": 35.578027,
     "lng": 129.356369,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -968,7 +861,6 @@
     "address": "전북 군산시 수송로 185 (수송동)",
     "lat": 35.964054,
     "lng": 126.713785,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -977,7 +869,6 @@
     "address": "전북 남원시 춘향로 96(향교동)",
     "lat": 35.422117,
     "lng": 127.394179,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -986,7 +877,6 @@
     "address": "전북 전주시 덕진구 송천중앙로 82 (송천동1가)",
     "lat": 35.854392,
     "lng": 127.120461,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -995,7 +885,6 @@
     "address": "전북 익산시 무왕로 1053 (영등동)",
     "lat": 35.917215,
     "lng": 126.911342,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1004,7 +893,6 @@
     "address": "전북 전주시 완산구 우전로 240(효자동2가,외1필지)",
     "lat": 35.823763,
     "lng": 127.14728,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1013,7 +901,6 @@
     "address": "전북 정읍시 벚꽃로 85 (농소동)",
     "lat": 35.567205,
     "lng": 126.846596,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1022,7 +909,6 @@
     "address": "전남 나주시 내동길 15",
     "lat": 35.012187,
     "lng": 126.710991,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1031,7 +917,6 @@
     "address": "전남 무안군 삼향읍 남악리 2622",
     "lat": 34.812203,
     "lng": 126.467544,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1040,7 +925,6 @@
     "address": "전남 목포시 원형서로 15 (상동)",
     "lat": 34.790334,
     "lng": 126.384755,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -1049,7 +933,6 @@
     "address": "전남 여수시 국포1로 36 (국동)",
     "lat": 34.727608,
     "lng": 127.716001,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1058,7 +941,6 @@
     "address": "전남 여수시 무선로 187 (선원동)",
     "lat": 34.78072,
     "lng": 127.646515,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1067,7 +949,6 @@
     "address": "광주광역시 서구 시청로 40 (치평동)",
     "lat": 35.152356,
     "lng": 126.852409,
-    "notify": false,
     "hasBody": false
   },
   {
@@ -1076,7 +957,6 @@
     "address": "광주광역시 광산구 장신로 98 (장덕동)",
     "lat": 35.190168,
     "lng": 126.820089,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1085,7 +965,6 @@
     "address": "광주광역시 광산구 장신로 98 (장덕동)",
     "lat": 35.190168,
     "lng": 126.820089,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1094,7 +973,6 @@
     "address": "광주광역시 서구 금화로 240 (풍암동) 월드컵경기장 내",
     "lat": 35.133771,
     "lng": 126.875004,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1103,7 +981,6 @@
     "address": "광주광역시 광산구 첨단강변로 99번길 22 (쌍암동)",
     "lat": 35.215639,
     "lng": 126.85077,
-    "notify": false,
     "hasBody": true
   },
   {
@@ -1112,7 +989,6 @@
     "address": "제주특별자치도 제주시 연북로 1 (노형동)",
     "lat": 33.482381,
     "lng": 126.481992,
-    "notify": false,
     "hasBody": true
   }
 ]

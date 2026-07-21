@@ -6,7 +6,7 @@
   <title>스위치2 전국 재고 지도</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    :root { --green:#2ecc71; --gray:#95a5a6; --faint:#d0d5da; --blue:#3498db; }
+    :root { --green:#2ecc71; --gray:#95a5a6; --faint:#d0d5da; }
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; font-family: system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif; }
     #map { position: absolute; inset: 0; }
@@ -28,7 +28,6 @@
     .pin.instock { background: var(--green); }
     .pin.soldout { background: var(--gray); width: 16px; height: 16px; }
     .pin.none    { background: var(--faint); width: 12px; height: 12px; border-width: 1px; }
-    .pin.notify  { outline: 3px solid var(--blue); outline-offset: 1px; }
     .leaflet-popup-content { font-size: 13px; line-height: 1.5; }
     .leaflet-popup-content b { font-size: 14px; }
   </style>
@@ -43,7 +42,6 @@
       <div><span style="background:var(--green)"></span>재고 있음 (숫자=수량)</div>
       <div><span style="background:var(--gray)"></span>품절</div>
       <div><span style="background:var(--faint)"></span>본체 미취급</div>
-      <div><span style="background:#fff;outline:2px solid var(--blue)"></span>알림 대상 지점</div>
     </div>
     <div class="muted" id="updated"></div>
     <div style="margin-top:8px"><a href="stats.html">📊 입고·품절 패턴 보기</a></div>
@@ -92,7 +90,6 @@
         if (m.hasBody === false) cls += "none";
         else if (has) { cls += "instock"; label = String(stock.qty ?? ""); }
         else cls += "soldout";
-        if (m.notify) cls += " notify";
 
         const size = m.hasBody === false ? 12 : has ? 26 : 16;
         const icon = L.divIcon({
@@ -107,7 +104,7 @@
           : has ? `재고 <b>${stock.qty}개</b>` : "품절";
         const naverUrl = `https://map.naver.com/p/search/${encodeURIComponent("롯데마트 " + m.name)}`;
         const popup =
-          `<b>${m.name}</b>${m.notify ? " 🔔" : ""}<br>` +
+          `<b>${m.name}</b><br>` +
           `${m.address ?? ""}<br>${stockText}` +
           (st ? `<br><span style="color:#889">확인 ${fmtTime(st.lastChecked)}</span>` : "") +
           `<br><a href="${naverUrl}" target="_blank" rel="noopener">📍 네이버지도에서 길찾기</a>`;

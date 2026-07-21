@@ -78,12 +78,11 @@
 
     const parseJsonl = (t) => t.split("\n").filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 
-    let events = [], markets = [], notifySet = new Set();
+    let events = [], markets = [];
 
     function applyFilter(val) {
       let evs = events;
-      if (val === "__notify") evs = events.filter((e) => notifySet.has(e.code));
-      else if (val && val !== "__all") evs = events.filter((e) => e.code === val);
+      if (val && val !== "__all") evs = events.filter((e) => e.code === val);
       renderHeatmap(evs);
       renderStock(evs);
       renderDuration(evs);
@@ -214,12 +213,11 @@
       ]);
       events = parseJsonl(evText);
       markets = mk;
-      notifySet = new Set(markets.filter((m) => m.notify).map((m) => m.code));
-      // 필터 옵션: 전국 / 관심 14곳 / 이벤트 등장 지점
+      // 필터 옵션: 전국 / 이벤트 등장 지점
       const seen = new Map();
       for (const e of events) if (!seen.has(e.code)) seen.set(e.code, e.name);
       const sel = document.getElementById("filter");
-      let opts = `<option value="__all">전국 (${seen.size}곳)</option><option value="__notify">관심 지점(알림 대상)</option>`;
+      let opts = `<option value="__all">전국 (${seen.size}곳)</option>`;
       for (const [code, name] of [...seen].sort((a, b) => a[1].localeCompare(b[1], "ko"))) opts += `<option value="${code}">${name}</option>`;
       sel.innerHTML = opts;
       sel.onchange = () => applyFilter(sel.value);

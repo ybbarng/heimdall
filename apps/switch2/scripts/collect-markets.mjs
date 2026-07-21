@@ -3,8 +3,7 @@
 //
 //   node apps/switch2/scripts/collect-markets.mjs
 //
-// - markets.json: 전국 지점 { code, name, address, lat, lng, notify, hasBody }
-//   · notify=true 인 지점만 Discord 알림(NOTIFY_CODES). 나머지는 지도에만 표시
+// - markets.json: 전국 지점 { code, name, address, lat, lng, hasBody }
 //   · 좌표는 도로명주소를 OpenStreetMap Nominatim으로 지오코딩(무료·키 불필요, 1req/s)
 // - docs/markets.md: 사람이 읽는 참조표(본체 취급 여부)
 // 재고 수량은 수시로 바뀌므로 여기엔 안 담는다. 최신 재고는 워처 state.json에서.
@@ -13,12 +12,6 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 const AREAS = ["서울","경기","인천","강원","충북","충남","대전","경북","경남","대구","부산","울산","전북","전남","광주","기타"];
 const SEARCH = "스위치2";
 const BODY = "닌텐도스위치2"; // 공백 제거 정규화 후 정확 일치
-
-// Discord 알림 대상(서울 동부 + 경기 동부·동남부). 이 지점만 notify=true
-const NOTIFY_CODES = new Set([
-  "2334","2302","2303","2301","2322","2323","2312", // 서울
-  "2471","2405","2457","2453","2473","2422","2417", // 경기
-]);
 
 const norm = (s) => s.replace(/\s+/g, "").toLowerCase();
 const stripTags = (h) => h.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
@@ -156,7 +149,7 @@ for (const r of allRows) {
 }
 console.error(`지오코딩: 신규 ${geocoded} · 근사 ${approxCount} · 실패 ${failCount} · 캐시 ${allRows.length - geocoded - failCount}`);
 
-// 3) markets.json 생성 (전국 + 좌표 + notify + hasBody). 좌표 있는 지점만
+// 3) markets.json 생성 (전국 + 좌표 + hasBody). 좌표 있는 지점만
 const markets = allRows
   .filter((r) => typeof r.lat === "number")
   .map((r) => ({
@@ -165,7 +158,6 @@ const markets = allRows
     address: r.addr,
     lat: Number(r.lat.toFixed(6)),
     lng: Number(r.lng.toFixed(6)),
-    notify: NOTIFY_CODES.has(r.code),
     hasBody: r.body,
   }));
 await writeFile(
@@ -174,7 +166,7 @@ await writeFile(
   "utf-8",
 );
 console.error(
-  `markets.json: ${markets.length}개 (알림 ${markets.filter((m) => m.notify).length} · 본체취급 ${markets.filter((m) => m.hasBody).length})`,
+  `markets.json: ${markets.length}개 (본체취급 ${markets.filter((m) => m.hasBody).length})`,
 );
 
 let md = `# 롯데마트 지점 참조 (스위치2 재고 워처)
