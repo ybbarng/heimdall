@@ -4,7 +4,7 @@
 #   ./run.sh switch2  → switch2
 # 앱은 core 로거로 logs/<워처>-YYYY-MM-DD.log 에 구조화 로그를 남기고,
 # 이 스크립트는 부트 단계(pnpm/tsx 실패 등) 원시 출력을 logs/run-<앱>.log 로 남긴다.
-export PATH="$HOME/.nvm/versions/node/v22.16.0/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v22.23.4/bin:$PATH"
 cd "$(dirname "$0")"
 APP="${1:-scourt}"
 mkdir -p logs
