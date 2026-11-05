@@ -7,7 +7,10 @@ export interface DiscordEmbed {
 }
 
 export interface DiscordMessage {
+  /** 이 메시지에만 쓸 보낸 이름 (웹훅 기본 이름을 덮어쓴다) */
   username?: string;
+  /** 이 메시지에만 쓸 프로필 사진 주소 (웹훅 기본 사진을 덮어쓴다) */
+  avatar_url?: string;
   content?: string;
   embeds?: DiscordEmbed[];
 }

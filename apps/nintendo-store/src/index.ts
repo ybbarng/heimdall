@@ -56,11 +56,17 @@ async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const webhookUrl = process.env["DISCORD_WEBHOOK_URL"] ?? "";
   const mention = process.env["MENTION"] ?? "";
+  const avatarUrl = process.env["AVATAR_URL"] || undefined;
   if (!webhookUrl && !dryRun) {
     throw new Error("DISCORD_WEBHOOK_URL 환경변수가 설정되지 않았습니다.");
   }
+  // 웹훅은 여러 워처가 함께 쓰므로, 보낸 이름·사진을 메시지마다 붙여 구분한다
   const send = (msg: Parameters<typeof sendDiscord>[1]) =>
-    sendDiscord(webhookUrl, { username: "heimdall · 닌텐도 스토어", ...msg }, { dryRun });
+    sendDiscord(
+      webhookUrl,
+      { username: "heimdall · 닌텐도 스토어", avatar_url: avatarUrl, ...msg },
+      { dryRun },
+    );
 
   const state = await storage.load();
   const now = new Date();
