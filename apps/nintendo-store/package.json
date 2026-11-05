@@ -1,0 +1,14 @@
+{
+  "name": "nintendo-store",
+  "version": "1.0.0",
+  "description": "닌텐도 스토어(store.nintendo.co.kr) 재입고 알림 워처",
+  "type": "module",
+  "scripts": {
+    "check": "tsx --env-file-if-exists=.env src/index.ts",
+    "dry": "tsx --env-file-if-exists=.env src/index.ts --dry-run",
+    "test": "tsx --test src/*.test.ts"
+  },
+  "dependencies": {
+    "@heimdall/core": "workspace:*"
+  }
+}

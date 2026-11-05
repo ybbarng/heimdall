@@ -16,6 +16,7 @@ packages/
     └── logger.ts    # 표준 로거 (logs/<워처>-YYYY-MM-DD.log)
 apps/
 ├── scourt/          # 나의사건검색(ssgo) 소송 진행 알림 (cron)
+├── nintendo-store/  # 닌텐도 스토어 재입고 알림 (cron, 3분)
 └── switch2/         # 롯데마트 스위치2 전국 재고 지도·통계 (폴링 데몬 + web/)
 ```
 
@@ -44,8 +45,11 @@ crontab에 워처를 따로 등록해 각각 켜고 끌 수 있다. 인자를 �
 
 ```
 5 * * * * /home/ybbarng/heimdall/run.sh scourt
-* * * * * /home/ybbarng/heimdall/run.sh switch2
+*/3 * * * * /home/ybbarng/heimdall/run.sh nintendo-store
 ```
+
+> 2026-10-20 byb.kr이 Traefik+Docker로 바뀌면서 pm2와 nginx가 없어졌다. 아래 switch2 절차는
+> 그 전 기준이고, switch2는 그때부터 멈춰 있다. 서버 운영 문서는 servers 저장소 `byb.kr/`에 있다.
 
 ### switch2 — 폴링 데몬 + 전국 재고 지도 (byb.kr)
 

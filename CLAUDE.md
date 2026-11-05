@@ -19,6 +19,7 @@ packages/core/   # @heimdall/core — 도메인 무관 공용 인프라
   src/logger.ts    # createLogger: 표준 로거 (console + logs/<워처>-YYYY-MM-DD.log)
 apps/scourt/     # 나의사건검색(ssgo) 워처. 상세는 apps/scourt/CLAUDE.md
 apps/switch2/    # 롯데마트 스위치2 재고 워처. 상세는 apps/switch2/CLAUDE.md
+apps/nintendo-store/ # 닌텐도 스토어 재입고 알림. 상세는 apps/nintendo-store/CLAUDE.md
 ```
 
 - 앱은 fetch·diff만 자기 안에 두고, 상태 저장·알림·로그는 core에서 가져온다.
